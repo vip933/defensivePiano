@@ -24,6 +24,9 @@ class MenuScene: TransitionScene {
         let logo = ButtonNode(imageName: DesignManager.shared.logoName, position: CGPoint(x: frame.midX, y: frame.midY), xScale: 0.35, yScale: 0.35)
         addChild(logo)
         
+        let logoText = LabelNode(text: "Defensive Piano", fontSize: 30, position: CGPoint(x: frame.midX, y: logo.frame.maxY + 5), fontColor: #colorLiteral(red: 0.9254901961, green: 0.9215686275, blue: 0.9529411765, alpha: 1))
+        addChild(logoText)
+        
         // Best score
         let bestScoreLabel = LabelNode(text: "Best score", fontSize: 30, position: CGPoint(x: frame.midX, y: frame.maxY - 100), fontColor: #colorLiteral(red: 0.9254901961, green: 0.9215686275, blue: 0.9529411765, alpha: 1))
         addChild(bestScoreLabel)

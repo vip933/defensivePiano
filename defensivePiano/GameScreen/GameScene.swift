@@ -51,7 +51,7 @@ final class GameScene: TransitionScene {
         
         // Piano button first
         let firstPianoButton = PianoButtonNode(color: .white, size: CGSize(width: (frame.width - 20) / 4, height: frame.height / 3))
-        firstPianoButton.attackPower = 100
+        firstPianoButton.attackPower = 10
         firstPianoButton.position = CGPoint(x: x, y: y)
         self.firstPianoButton = firstPianoButton
         addChild(firstPianoButton)
@@ -60,7 +60,7 @@ final class GameScene: TransitionScene {
         
         // Piano button second
         let secondPianoButton = PianoButtonNode(color: .white, size: CGSize(width: (frame.width - 20) / 4, height: frame.height / 3))
-        secondPianoButton.attackPower = 200
+        secondPianoButton.attackPower = 40
         secondPianoButton.position = CGPoint(x: x, y: y)
         self.seccondPianoButton = secondPianoButton
         addChild(secondPianoButton)
@@ -69,7 +69,7 @@ final class GameScene: TransitionScene {
         
         // Piano button third
         let thirdPianoButton = PianoButtonNode(color: .white, size: CGSize(width: (frame.width - 20) / 4, height: frame.height / 3))
-        thirdPianoButton.attackPower = 300
+        thirdPianoButton.attackPower = 60
         thirdPianoButton.position = CGPoint(x: x, y: y)
         self.thirdPianoButton = thirdPianoButton
         addChild(thirdPianoButton)
@@ -78,7 +78,7 @@ final class GameScene: TransitionScene {
         
         // Piano button forth
         let forthPianoButton = PianoButtonNode(color: .white, size: CGSize(width: (frame.width - 20) / 4, height: frame.height / 3))
-        forthPianoButton.attackPower = 400
+        forthPianoButton.attackPower = 100
         forthPianoButton.position = CGPoint(x: x, y: y)
         self.forthPianoButton = forthPianoButton
         addChild(forthPianoButton)
