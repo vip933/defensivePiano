@@ -15,22 +15,31 @@ final class GameScene: TransitionScene {
     private var seccondPianoButton = PianoButtonNode()
     private var thirdPianoButton = PianoButtonNode()
     private var forthPianoButton = PianoButtonNode()
+    private var finish = LabelNode()
+    private var start = LabelNode()
     
     private var startPoint = CGPoint.zero
     private var finishPoint = CGPoint.zero
     
-    // Enemy piano note
-    private var enemy = EnemyNode()
+    // Enemy piano nodes
+    private var enemies: [EnemyNode] = []
     var givenDamage = 0
     
     override func didMove(to view: SKView) {
         setupUI()
         setupEnemy()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            Thread.sleep(forTimeInterval: 3)
+            self?.setupEnemy()
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
-        if !UIScreen.main.bounds.contains(enemy.position) {
-            enemy.removeFromParent()
+        if !UIScreen.main.bounds.contains(enemies[0].position) {
+            enemies[0].removeFromParent()
+            enemies.remove(at: 0)
+        }
+        if (enemies.count == 0) {
             changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
         }
     }
@@ -87,11 +96,13 @@ final class GameScene: TransitionScene {
         startPoint = CGPoint(x: frame.width - 55, y: frame.height / 3 + 20)
         let start = LabelNode(text: "Start", fontSize: 20, position: startPoint, fontColor: .blue)
         addChild(start)
+        self.start = start
         
         // Finish
         finishPoint = CGPoint(x: 55, y: frame.height - 125)
         let finish = LabelNode(text: "Finish", fontSize: 20, position: finishPoint, fontColor: .blue)
         addChild(finish)
+        self.finish = finish
         
         // Enemy hp
         let enemyHP = LabelNode(text: "0", fontSize: 20, position: CGPoint(x: frame.maxX - 50, y: frame.maxY - 40), fontColor: .white)
@@ -100,10 +111,13 @@ final class GameScene: TransitionScene {
     }
     
     private func setupEnemy() {
-        enemy = EnemyNode(imageNamed: "badNote1.png")
+        let enemy = EnemyNode(imageNamed: "badNote1.png")
         enemy.size.height = 64
         enemy.size.width = 64
         enemy.position = startPoint
+        enemies.append(enemy)
+        print("enemies appended.")
+        print(enemies.count)
         addChild(enemy)
         
         let leftX = finishPoint.x
@@ -188,6 +202,10 @@ final class GameScene: TransitionScene {
         }
     }
     
+    private func loseGame() {
+        changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
@@ -199,25 +217,25 @@ final class GameScene: TransitionScene {
             // First piano button
             if (firstPianoButton.contains(location)) {
                 firstPianoButton.run(SKAction.playSoundFileNamed("do.mp3", waitForCompletion: true))
-                shoot(enemy: enemy, shooter: firstPianoButton)
+                shoot(enemy: enemies[0], shooter: firstPianoButton)
             }
             
             // Second piano button
             if (seccondPianoButton.contains(location)) {
                 seccondPianoButton.run(SKAction.playSoundFileNamed("fa.mp3", waitForCompletion: true))
-                shoot(enemy: enemy, shooter: seccondPianoButton)
+                shoot(enemy: enemies[0], shooter: seccondPianoButton)
             }
             
             // Third piano button
             if (thirdPianoButton.contains(location)) {
                 thirdPianoButton.run(SKAction.playSoundFileNamed("la.mp3", waitForCompletion: true))
-                shoot(enemy: enemy, shooter: thirdPianoButton)
+                shoot(enemy: enemies[0], shooter: thirdPianoButton)
             }
             
             // Forth piano button
             if (forthPianoButton.contains(location)) {
                 forthPianoButton.run(SKAction.playSoundFileNamed("si.mp3", waitForCompletion: true))
-                shoot(enemy: enemy, shooter: forthPianoButton)
+                shoot(enemy: enemies[0], shooter: forthPianoButton)
             }
         }
     }
