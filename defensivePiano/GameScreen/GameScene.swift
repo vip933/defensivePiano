@@ -44,9 +44,6 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
             enemies[0].removeFromParent()
             enemies.remove(at: 0)
         }
-        if (enemies.count == 0) {
-            changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
-        }
     }
     
     private func setupPhysics() {
@@ -145,10 +142,10 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
     
     @objc
     private func setupEnemy() {
-        let enemy = EnemyNode(imageNamed: "badNote1.png")
+        let imgName = "badNote" + String(Int.random(in: 1...6)) + ".png"
+        let enemy = EnemyNode(imageNamed: imgName)
         enemy.size.height = 64
         enemy.size.width = 64
-        enemy.color = UIColor(red: CGFloat.random(in: 0...255), green: CGFloat.random(in: 0...255), blue: CGFloat.random(in: 0...255), alpha: CGFloat.random(in: 0...1))
         enemy.position = startPoint
         enemies.append(enemy)
         
@@ -245,16 +242,23 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if enemies.count == 0 {
+            return
+        }
         for touch in touches {
             let location = touch.location(in: self)
             
             // To menu scene
             if (backButton.contains(location)) {
+                if let timer = self.timer {
+                    timer.invalidate()
+                }
                 changeToSceneBy(nameScene: "MenuScene", userData: NSMutableDictionary.init())
             }
             
             // First piano button
             if (firstPianoButton.contains(location)) {
+                firstPianoButton.color = .darkGray
                 DispatchQueue.global(qos: .background).async {
                     self.firstPianoButton.run(SKAction.playSoundFileNamed("do.mp3", waitForCompletion: true))
                 }
@@ -263,6 +267,7 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
             
             // Second piano button
             if (seccondPianoButton.contains(location)) {
+                seccondPianoButton.color = .darkGray
                 DispatchQueue.global(qos: .background).async {
                     self.seccondPianoButton.run(SKAction.playSoundFileNamed("fa.mp3", waitForCompletion: true))
                 }
@@ -271,6 +276,7 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
             
             // Third piano button
             if (thirdPianoButton.contains(location)) {
+                thirdPianoButton.color = .darkGray
                 DispatchQueue.global(qos: .background).async {
                     self.thirdPianoButton.run(SKAction.playSoundFileNamed("la.mp3", waitForCompletion: true))
                 }
@@ -279,10 +285,37 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
             
             // Forth piano button
             if (forthPianoButton.contains(location)) {
+                forthPianoButton.color = .darkGray
                 DispatchQueue.global(qos: .background).async {
                     self.forthPianoButton.run(SKAction.playSoundFileNamed("si.mp3", waitForCompletion: true))
                 }
-                shoot(enemy: enemies[0], shooter: forthPianoButton,power: forthPianoButton.attackPower)
+                shoot(enemy: enemies[0], shooter: forthPianoButton, power: forthPianoButton.attackPower)
+            }
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches {
+            let location = touch.location(in: self)
+            
+            // First piano button
+            if (firstPianoButton.contains(location)) {
+                firstPianoButton.color = .white
+            }
+            
+            // Second piano button
+            if (seccondPianoButton.contains(location)) {
+                seccondPianoButton.color = .white
+            }
+            
+            // Third piano button
+            if (thirdPianoButton.contains(location)) {
+                thirdPianoButton.color = .white
+            }
+            
+            // Forth piano button
+            if (forthPianoButton.contains(location)) {
+                forthPianoButton.color = .white
             }
         }
     }

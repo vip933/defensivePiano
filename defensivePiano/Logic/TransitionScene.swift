@@ -26,6 +26,8 @@ class TransitionScene: SKScene {
             }
         case "SettingsScene":
             scene = SettingsScene(size: self.size)
+        case "MultiplayerGameScene":
+            scene = MultiplayerGameScene(size: self.size)
         default:
             return
         }

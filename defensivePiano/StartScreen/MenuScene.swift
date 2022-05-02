@@ -60,9 +60,13 @@ class MenuScene: TransitionScene {
                 changeToSceneBy(nameScene: "GameScene", userData: NSMutableDictionary.init())
             }
             
-            // To settings scene
+//            // To settings scene
+//            if (settingsButton.contains(location)) {
+//                changeToSceneBy(nameScene: "SettingsScene", userData: NSMutableDictionary.init())
+//            }
             if (settingsButton.contains(location)) {
-                changeToSceneBy(nameScene: "SettingsScene", userData: NSMutableDictionary.init())
+                print("multiplayer")
+                changeToSceneBy(nameScene: "MultiplayerGameScene", userData: NSMutableDictionary.init())
             }
         }
     }

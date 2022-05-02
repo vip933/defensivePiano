@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B57553EC281FDCE9006C9D1D /* silent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B57553EB281FDCE9006C9D1D /* silent.mp3 */; };
+		B57553EF281FEE49006C9D1D /* MultiplayerGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57553EE281FEE49006C9D1D /* MultiplayerGameScene.swift */; };
+		B57553F1281FEE61006C9D1D /* MultiplayerGameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = B57553F0281FEE60006C9D1D /* MultiplayerGameScene.sks */; };
+		B57553F3281FEE91006C9D1D /* FieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57553F2281FEE91006C9D1D /* FieldView.swift */; };
 		B598F2CA27DDDD7A008983A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2C927DDDD7A008983A0 /* AppDelegate.swift */; };
 		B598F2D027DDDD7A008983A0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2CF27DDDD7A008983A0 /* GameScene.swift */; };
 		B598F2D227DDDD7A008983A0 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2D127DDDD7A008983A0 /* MenuViewController.swift */; };
@@ -33,6 +36,9 @@
 
 /* Begin PBXFileReference section */
 		B57553EB281FDCE9006C9D1D /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
+		B57553EE281FEE49006C9D1D /* MultiplayerGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerGameScene.swift; sourceTree = "<group>"; };
+		B57553F0281FEE60006C9D1D /* MultiplayerGameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MultiplayerGameScene.sks; sourceTree = "<group>"; };
+		B57553F2281FEE91006C9D1D /* FieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldView.swift; sourceTree = "<group>"; };
 		B598F2C627DDDD7A008983A0 /* defensivePiano.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = defensivePiano.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B598F2C927DDDD7A008983A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B598F2CF27DDDD7A008983A0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -69,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B57553ED281FEE1D006C9D1D /* MultiplayerGameScreen */ = {
+			isa = PBXGroup;
+			children = (
+				B57553EE281FEE49006C9D1D /* MultiplayerGameScene.swift */,
+				B57553F0281FEE60006C9D1D /* MultiplayerGameScene.sks */,
+			);
+			path = MultiplayerGameScreen;
+			sourceTree = "<group>";
+		};
 		B598F2BD27DDDD7A008983A0 = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +103,7 @@
 		B598F2C827DDDD7A008983A0 /* defensivePiano */ = {
 			isa = PBXGroup;
 			children = (
+				B57553ED281FEE1D006C9D1D /* MultiplayerGameScreen */,
 				B598F32227E0A205008983A0 /* Sounds */,
 				B598F31627DF4D8A008983A0 /* Logic */,
 				B598F2DF27DDDF47008983A0 /* StartScreen */,
@@ -137,6 +153,7 @@
 				B598F31227DE4096008983A0 /* Constants.swift */,
 				B598F31727DF4DD4008983A0 /* TransitionScene.swift */,
 				B598F30D27DE3936008983A0 /* Nodes */,
+				B57553F2281FEE91006C9D1D /* FieldView.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -227,6 +244,7 @@
 				B598F32C27E0A328008983A0 /* explosion.mp3 in Resources */,
 				B598F2D527DDDD7A008983A0 /* Main.storyboard in Resources */,
 				B598F32A27E0A227008983A0 /* si.mp3 in Resources */,
+				B57553F1281FEE61006C9D1D /* MultiplayerGameScene.sks in Resources */,
 				B57553EC281FDCE9006C9D1D /* silent.mp3 in Resources */,
 				B598F30C27DE33D9008983A0 /* MenuScene.sks in Resources */,
 				B598F2D727DDDD7C008983A0 /* Assets.xcassets in Resources */,
@@ -246,10 +264,12 @@
 				B598F31827DF4DD4008983A0 /* TransitionScene.swift in Sources */,
 				B598F2D027DDDD7A008983A0 /* GameScene.swift in Sources */,
 				B598F30A27DE33BC008983A0 /* MenuScene.swift in Sources */,
+				B57553F3281FEE91006C9D1D /* FieldView.swift in Sources */,
 				B598F2D227DDDD7A008983A0 /* MenuViewController.swift in Sources */,
 				B598F32127DFBFEC008983A0 /* EnemyNode.swift in Sources */,
 				B598F31B27DF52D1008983A0 /* SettingsScene.swift in Sources */,
 				B598F2CA27DDDD7A008983A0 /* AppDelegate.swift in Sources */,
+				B57553EF281FEE49006C9D1D /* MultiplayerGameScene.swift in Sources */,
 				B598F30F27DE3956008983A0 /* ButtonNode.swift in Sources */,
 				B598F31327DE4096008983A0 /* Constants.swift in Sources */,
 			);
