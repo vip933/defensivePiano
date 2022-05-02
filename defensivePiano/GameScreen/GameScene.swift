@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-final class GameScene: TransitionScene {
+final class GameScene: TransitionScene, SKPhysicsContactDelegate {
     private var gameLabel = SKLabelNode()
     private var enemyHP = SKLabelNode()
     private var backButton = SKSpriteNode()
@@ -25,16 +25,21 @@ final class GameScene: TransitionScene {
     private var enemies: [EnemyNode] = []
     var givenDamage = 0
     
+    private let finishMask: UInt32 = 0x1 << 0
+    private let enemyMask: UInt32 = 0x1 << 1
+    private var timer: Timer?
+    
     override func didMove(to view: SKView) {
+        view.showsPhysics = true
         setupUI()
-        setupEnemy()
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            Thread.sleep(forTimeInterval: 3)
-            self?.setupEnemy()
-        }
+        setupSpawner()
+        setupPhysics()
     }
     
     override func update(_ currentTime: TimeInterval) {
+        if (enemies.count == 0 ) {
+            return
+        }
         if !UIScreen.main.bounds.contains(enemies[0].position) {
             enemies[0].removeFromParent()
             enemies.remove(at: 0)
@@ -42,6 +47,21 @@ final class GameScene: TransitionScene {
         if (enemies.count == 0) {
             changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
         }
+    }
+    
+    private func setupPhysics() {
+        self.physicsWorld.contactDelegate = self
+        
+        finish.physicsBody = SKPhysicsBody(rectangleOf: finish.frame.size)
+        finish.physicsBody?.isDynamic = true
+        finish.physicsBody?.affectedByGravity = false
+        finish.physicsBody?.categoryBitMask = finishMask
+        finish.physicsBody?.contactTestBitMask = enemyMask
+        finish.physicsBody?.collisionBitMask = 0
+    }
+    
+    private func setupSpawner() {
+        timer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(self.setupEnemy), userInfo: nil, repeats: true)
     }
     
     private func setupUI() {
@@ -94,13 +114,13 @@ final class GameScene: TransitionScene {
         
         // Start
         startPoint = CGPoint(x: frame.width - 55, y: frame.height / 3 + 20)
-        let start = LabelNode(text: "Start", fontSize: 20, position: startPoint, fontColor: .blue)
+        let start = LabelNode(text: "Start", fontSize: 20, position: startPoint, fontColor: .clear)
         addChild(start)
         self.start = start
         
         // Finish
         finishPoint = CGPoint(x: 55, y: frame.height - 125)
-        let finish = LabelNode(text: "Finish", fontSize: 20, position: finishPoint, fontColor: .blue)
+        let finish = LabelNode(text: "Finish", fontSize: 20, position: finishPoint, fontColor: .clear)
         addChild(finish)
         self.finish = finish
         
@@ -110,12 +130,34 @@ final class GameScene: TransitionScene {
         addChild(enemyHP)
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        DispatchQueue.global(qos: .background).async {
+            for i in 0..<self.enemies.count {
+                self.enemies[i].removeFromParent()
+            }
+            self.enemies.removeAll()
+            if let timer = self.timer {
+                timer.invalidate()
+            }
+        }
+        changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
+    }
+    
+    @objc
     private func setupEnemy() {
         let enemy = EnemyNode(imageNamed: "badNote1.png")
         enemy.size.height = 64
         enemy.size.width = 64
+        enemy.color = UIColor(red: CGFloat.random(in: 0...255), green: CGFloat.random(in: 0...255), blue: CGFloat.random(in: 0...255), alpha: CGFloat.random(in: 0...1))
         enemy.position = startPoint
         enemies.append(enemy)
+        
+        enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+        enemy.physicsBody?.isDynamic = false
+        enemy.physicsBody?.categoryBitMask = enemyMask
+        enemy.physicsBody?.contactTestBitMask = finishMask
+        enemy.physicsBody?.collisionBitMask = finishMask
+        
         print("enemies appended.")
         print(enemies.count)
         addChild(enemy)
@@ -167,7 +209,7 @@ final class GameScene: TransitionScene {
         return CGFloat(sqrt(xDist * xDist + yDist * yDist))
     }
     
-    private func shoot(enemy: EnemyNode, shooter: PianoButtonNode) {
+    private func shoot(enemy: EnemyNode, shooter: PianoButtonNode, power: Int) {
         // Create rocket
         let rocket = SKSpriteNode(imageNamed: "lighting.png")
         rocket.size.height = 35
@@ -181,13 +223,13 @@ final class GameScene: TransitionScene {
         rocket.zPosition = 3
         
         // Rocket health effect
-        if enemy.hp - shooter.attackPower >= 0 {
-            givenDamage += shooter.attackPower
+        if enemy.hp - power >= 0 {
+            givenDamage += power
         } else {
             givenDamage += enemy.hp
         }
         
-        enemy.hp -= shooter.attackPower
+        enemy.hp -= power
         enemyHP.text = String(enemy.hp)
         
         // Die action
@@ -202,10 +244,6 @@ final class GameScene: TransitionScene {
         }
     }
     
-    private func loseGame() {
-        changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
@@ -214,28 +252,37 @@ final class GameScene: TransitionScene {
             if (backButton.contains(location)) {
                 changeToSceneBy(nameScene: "MenuScene", userData: NSMutableDictionary.init())
             }
+            
             // First piano button
             if (firstPianoButton.contains(location)) {
-                firstPianoButton.run(SKAction.playSoundFileNamed("do.mp3", waitForCompletion: true))
-                shoot(enemy: enemies[0], shooter: firstPianoButton)
+                DispatchQueue.global(qos: .background).async {
+                    self.firstPianoButton.run(SKAction.playSoundFileNamed("do.mp3", waitForCompletion: true))
+                }
+                shoot(enemy: enemies[0], shooter: firstPianoButton, power: firstPianoButton.attackPower)
             }
             
             // Second piano button
             if (seccondPianoButton.contains(location)) {
-                seccondPianoButton.run(SKAction.playSoundFileNamed("fa.mp3", waitForCompletion: true))
-                shoot(enemy: enemies[0], shooter: seccondPianoButton)
+                DispatchQueue.global(qos: .background).async {
+                    self.seccondPianoButton.run(SKAction.playSoundFileNamed("fa.mp3", waitForCompletion: true))
+                }
+                shoot(enemy: enemies[0], shooter: seccondPianoButton, power: seccondPianoButton.attackPower)
             }
             
             // Third piano button
             if (thirdPianoButton.contains(location)) {
-                thirdPianoButton.run(SKAction.playSoundFileNamed("la.mp3", waitForCompletion: true))
-                shoot(enemy: enemies[0], shooter: thirdPianoButton)
+                DispatchQueue.global(qos: .background).async {
+                    self.thirdPianoButton.run(SKAction.playSoundFileNamed("la.mp3", waitForCompletion: true))
+                }
+                shoot(enemy: enemies[0], shooter: thirdPianoButton, power: thirdPianoButton.attackPower)
             }
             
             // Forth piano button
             if (forthPianoButton.contains(location)) {
-                forthPianoButton.run(SKAction.playSoundFileNamed("si.mp3", waitForCompletion: true))
-                shoot(enemy: enemies[0], shooter: forthPianoButton)
+                DispatchQueue.global(qos: .background).async {
+                    self.forthPianoButton.run(SKAction.playSoundFileNamed("si.mp3", waitForCompletion: true))
+                }
+                shoot(enemy: enemies[0], shooter: forthPianoButton,power: forthPianoButton.attackPower)
             }
         }
     }

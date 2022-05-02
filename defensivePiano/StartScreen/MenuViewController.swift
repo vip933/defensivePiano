@@ -13,6 +13,12 @@ class MenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        DispatchQueue.global(qos: .background).async {
+            Thread.sleep(forTimeInterval: 2)
+            SKNode().run(SKAction.playSoundFileNamed("silent.mp3", waitForCompletion: true))
+            print("start sound")
+        }
+        
         if let view = self.view as! SKView? {
             
             if let scene = MenuScene(fileNamed: "MenuScene") {

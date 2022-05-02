@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B57553EC281FDCE9006C9D1D /* silent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B57553EB281FDCE9006C9D1D /* silent.mp3 */; };
 		B598F2CA27DDDD7A008983A0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2C927DDDD7A008983A0 /* AppDelegate.swift */; };
 		B598F2D027DDDD7A008983A0 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2CF27DDDD7A008983A0 /* GameScene.swift */; };
 		B598F2D227DDDD7A008983A0 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B598F2D127DDDD7A008983A0 /* MenuViewController.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B57553EB281FDCE9006C9D1D /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
 		B598F2C627DDDD7A008983A0 /* defensivePiano.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = defensivePiano.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B598F2C927DDDD7A008983A0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B598F2CF27DDDD7A008983A0 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 		B598F32227E0A205008983A0 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				B57553EB281FDCE9006C9D1D /* silent.mp3 */,
 				B598F32B27E0A328008983A0 /* explosion.mp3 */,
 				B598F32327E0A226008983A0 /* do.mp3 */,
 				B598F32427E0A226008983A0 /* fa.mp3 */,
@@ -224,6 +227,7 @@
 				B598F32C27E0A328008983A0 /* explosion.mp3 in Resources */,
 				B598F2D527DDDD7A008983A0 /* Main.storyboard in Resources */,
 				B598F32A27E0A227008983A0 /* si.mp3 in Resources */,
+				B57553EC281FDCE9006C9D1D /* silent.mp3 in Resources */,
 				B598F30C27DE33D9008983A0 /* MenuScene.sks in Resources */,
 				B598F2D727DDDD7C008983A0 /* Assets.xcassets in Resources */,
 				B598F32727E0A227008983A0 /* do.mp3 in Resources */,
