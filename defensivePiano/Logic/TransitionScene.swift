@@ -19,9 +19,14 @@ class TransitionScene: SKScene {
         case "MenuScene":
             scene = MenuScene(size: self.size)
             if userData.count != 0 {
-                let damage = userData["damage"] as! Int
-                if (scene as! MenuScene).highScore < damage {
-                    (scene as! MenuScene).highScore = damage
+                if userData["damage"] != nil {
+                    let damage = userData["damage"] as! Int
+                    if (scene as! MenuScene).highScore < damage {
+                        (scene as! MenuScene).highScore = damage
+                    }
+                } else if userData["type"] != nil {
+                    let type = userData["type"] as! Bool
+                    (scene as! MenuScene).isSinglePlayer = type
                 }
             }
         case "SettingsScene":

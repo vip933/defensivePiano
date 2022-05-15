@@ -12,6 +12,7 @@ class MenuScene: TransitionScene {
     var settingsButton = SKSpriteNode()
     
     var highScore = 0
+    var isSinglePlayer = true
     
     override func didMove(to view: SKView) {
         setupUI()
@@ -57,16 +58,16 @@ class MenuScene: TransitionScene {
             let location = touch.location(in: self)
             // To game scene
             if (startButton.contains(location)) {
-                changeToSceneBy(nameScene: "GameScene", userData: NSMutableDictionary.init())
+                if isSinglePlayer {
+                    changeToSceneBy(nameScene: "GameScene", userData: NSMutableDictionary.init())
+                } else {
+                    changeToSceneBy(nameScene: "MultiplayerGameScene", userData: NSMutableDictionary.init())
+                }
             }
             
-//            // To settings scene
-//            if (settingsButton.contains(location)) {
-//                changeToSceneBy(nameScene: "SettingsScene", userData: NSMutableDictionary.init())
-//            }
+            // To settings scene
             if (settingsButton.contains(location)) {
-                print("multiplayer")
-                changeToSceneBy(nameScene: "MultiplayerGameScene", userData: NSMutableDictionary.init())
+                changeToSceneBy(nameScene: "SettingsScene", userData: ["type": isSinglePlayer])
             }
         }
     }
