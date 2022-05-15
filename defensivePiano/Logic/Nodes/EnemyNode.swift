@@ -7,6 +7,6 @@
 
 import SpriteKit
 
-class EnemyNode: SKSpriteNode {
+final class EnemyNode: SKSpriteNode {
     var hp = 1000
 }

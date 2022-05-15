@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-final class GameScene: TransitionScene, SKPhysicsContactDelegate {
+final class GameScene: TransitionScene, SKPhysicsContactDelegate, Alertable {
     private var gameLabel = SKLabelNode()
     private var enemyHP = SKLabelNode()
     private var backButton = SKSpriteNode()
@@ -30,7 +30,7 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
     private var timer: Timer?
     
     override func didMove(to view: SKView) {
-        view.showsPhysics = true
+        //view.showsPhysics = true
         setupUI()
         setupSpawner()
         setupPhysics()
@@ -128,16 +128,17 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        DispatchQueue.global(qos: .background).async {
-            for i in 0..<self.enemies.count {
-                self.enemies[i].removeFromParent()
-            }
-            self.enemies.removeAll()
-            if let timer = self.timer {
-                timer.invalidate()
-            }
+        for i in 0..<self.enemies.count {
+            self.enemies[i].removeFromParent()
         }
-        changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage])
+        self.enemies.removeAll()
+        if let timer = self.timer {
+            timer.invalidate()
+        }
+        
+        showAlert(withTitle: "You lose", message: "Current score: " + String(givenDamage)) {
+            self.changeToSceneBy(nameScene: "MenuScene", userData: ["damage": self.givenDamage])
+        }
     }
     
     @objc
@@ -154,9 +155,6 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
         enemy.physicsBody?.categoryBitMask = enemyMask
         enemy.physicsBody?.contactTestBitMask = finishMask
         enemy.physicsBody?.collisionBitMask = finishMask
-        
-        print("enemies appended.")
-        print(enemies.count)
         addChild(enemy)
         
         let leftX = finishPoint.x
@@ -196,7 +194,6 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
         
         let action = SKAction.repeatForever(SKAction.sequence(moves))
         enemy.run(action)
-        enemyHP.text = String(enemy.hp)
     }
     
     // Evaluates distance between two points
@@ -227,7 +224,7 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
         }
         
         enemy.hp -= power
-        enemyHP.text = String(enemy.hp)
+        enemyHP.text = String(givenDamage)
         
         // Die action
         if enemy.hp <= 0 {
@@ -318,5 +315,17 @@ final class GameScene: TransitionScene, SKPhysicsContactDelegate {
                 forthPianoButton.color = .white
             }
         }
+    }
+}
+
+protocol Alertable { }
+extension Alertable where Self: TransitionScene {
+    func showAlert(withTitle title: String, message: String, completion: @escaping ()->Void) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .cancel) { (succes) in
+            completion()
+        }
+        alertController.addAction(okAction)
+        view?.window?.rootViewController?.present(alertController, animated: true)
     }
 }

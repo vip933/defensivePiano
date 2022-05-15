@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate {
+final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate, Alertable {
     private var gameLabel = SKLabelNode()
     private var enemyHP = SKLabelNode()
     private var backButton = SKSpriteNode()
@@ -42,7 +42,7 @@ final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate {
     private var timer2: Timer?
     
     override func didMove(to view: SKView) {
-        view.showsPhysics = true
+        //view.showsPhysics = true
         setupUI()
         setupSpawner()
         setupPhysics()
@@ -189,22 +189,41 @@ final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        DispatchQueue.global(qos: .background).async {
-            for i in 0..<self.enemies1.count {
-                self.enemies1[i].removeFromParent()
+        for i in 0..<self.enemies1.count {
+            self.enemies1[i].removeFromParent()
+        }
+        for i in 0..<self.enemies2.count {
+            self.enemies2[i].removeFromParent()
+        }
+        self.enemies1.removeAll()
+        self.enemies2.removeAll()
+        if let timer = self.timer1,
+           let timer2 = self.timer2 {
+            timer.invalidate()
+            timer2.invalidate()
+        }
+        
+        if contact.bodyA.categoryBitMask == finishMask {
+            if contact.bodyB.categoryBitMask == enemyMask {
+                showAlert(withTitle: "Player in top won!", message: "Current score: " + String(givenDamaga2)) {
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                }
+            } else {
+                showAlert(withTitle: "Player in bottom won!", message: "Current score: " + String(givenDamage1)) {
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                }
             }
-            for i in 0..<self.enemies2.count {
-                self.enemies2[i].removeFromParent()
-            }
-            self.enemies1.removeAll()
-            self.enemies2.removeAll()
-            if let timer = self.timer1,
-            let timer2 = self.timer2 {
-                timer.invalidate()
-                timer2.invalidate()
+        } else {
+            if contact.bodyA.categoryBitMask == enemyMask {
+                showAlert(withTitle: "Player in top won!", message: "Current score: " + String(givenDamaga2)) {
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                }
+            } else {
+                showAlert(withTitle: "Player in bottom won!", message: "Current score: " + String(givenDamage1)) {
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                }
             }
         }
-        changeToSceneBy(nameScene: "MenuScene", userData: ["damage": givenDamage1])
     }
     
     @objc
@@ -380,7 +399,7 @@ final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate {
             // To menu scene
             if (backButton.contains(location)) {
                 if let timer = self.timer1,
-                let timer2 = self.timer2 {
+                   let timer2 = self.timer2 {
                     timer.invalidate()
                     timer2.invalidate()
                 }
