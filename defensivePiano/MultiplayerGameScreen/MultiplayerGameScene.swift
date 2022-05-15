@@ -206,21 +206,21 @@ final class MultiplayerGameScene: TransitionScene, SKPhysicsContactDelegate, Ale
         if contact.bodyA.categoryBitMask == finishMask {
             if contact.bodyB.categoryBitMask == enemyMask {
                 showAlert(withTitle: "Player in top won!", message: "Current score: " + String(givenDamaga2)) {
-                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: ["damage": self.givenDamaga2])
                 }
             } else {
                 showAlert(withTitle: "Player in bottom won!", message: "Current score: " + String(givenDamage1)) {
-                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: ["damage": self.givenDamage1])
                 }
             }
         } else {
             if contact.bodyA.categoryBitMask == enemyMask {
                 showAlert(withTitle: "Player in top won!", message: "Current score: " + String(givenDamaga2)) {
-                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: ["damage": self.givenDamaga2])
                 }
             } else {
                 showAlert(withTitle: "Player in bottom won!", message: "Current score: " + String(givenDamage1)) {
-                    self.changeToSceneBy(nameScene: "MenuScene", userData: [:])
+                    self.changeToSceneBy(nameScene: "MenuScene", userData: ["damage": self.givenDamage1])
                 }
             }
         }
